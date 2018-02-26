@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -ev
+
 #################
 #
 # Show help and exit
