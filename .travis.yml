@@ -3,6 +3,10 @@ sudo: required
 services:
   - docker
 
+# the following skips the travis install step, which would run mvn install
+install: true
+
+# run our custom build script
 script: ./build.sh
 
 git:
