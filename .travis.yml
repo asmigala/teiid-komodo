@@ -11,11 +11,10 @@ cache:
   - "$HOME/.m2"
 
 install: true
-script: "mvn clean install -B -s settings.xml -Pdocker-release -DskipTests -Ddocker.tag=asmigala/komodo"
+script: "mvn clean install -B -s settings.xml -Pdocker-release"
 
 after_success:
-  - if [[ "$TRAVIS_PULL_REQUEST" == "false" ]]; then
+  - if [[ ( "$TRAVIS_BRANCH" == "master" ) && ( "$TRAVIS_PULL_REQUEST" == "false" ) ]]; then
       docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD ;
-      docker images ;
       docker push $DOCKER_USERNAME/komodo ;
     fi
