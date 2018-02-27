@@ -7,7 +7,7 @@ services:
 install: true
 
 # run our custom build script
-script: ./build.sh -s -b
+script: ./build.sh -b
 
 git:
   depth: 1
