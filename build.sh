@@ -10,6 +10,7 @@ set -e
 function show_help {
 	echo "Usage: $0 [-d] [-s] [-q] [-z] [-h]"
 	echo "-d - enable maven debugging"
+	echo "-b - enable maven batch mode"
 	echo "-h - show this help"
 	echo "-s - skip unit test execution"
 	echo "-q - execute integration test execution"
@@ -56,6 +57,7 @@ DEBUG=0
 while getopts ":dhsqz" opt;
 do
   case $opt in
+    b) BATCH=1 ;;
     d) DEBUG=1 ;;
     h) show_help ;;
     s) SKIP=1 ;;
@@ -85,13 +87,22 @@ LOCAL_REPO="${HOME}/.m2/repository"
 # Maven command
 #
 MVN="mvn clean install"
+MVN_FLAGS=
 
 #
 # Turn on dedugging if required
 #
 if [ "${DEBUG}" == "1" ]; then
   echo "** Adding debugging maven parameters **"
-  MVN_FLAGS="-e -X -U"
+  MVN_FLAGS="${MVN_FLAGS} -e -X -U"
+fi
+
+#
+# Turn on batch if required
+#
+if [ "${BATCH}" == "1" ]; then
+  echo "** Adding batch maven parameters **"
+  MVN_FLAGS="${MVN_FLAGS} -B"
 fi
 
 #
@@ -117,7 +128,7 @@ fi
 # Maven options
 # -D maven.repo.local : Assign the $LOCAL_REPO as the target repository
 #
-MVN_FLAGS="${MVN_FLAGS} -B -s settings.xml -Dmaven.repo.local=${LOCAL_REPO} ${SKIP_FLAG} ${INTEGRATION_TEST_FLAG} ${DOCKER_RELEASE}"
+MVN_FLAGS="${MVN_FLAGS} -s settings.xml -Dmaven.repo.local=${LOCAL_REPO} ${SKIP_FLAG} ${INTEGRATION_TEST_FLAG} ${DOCKER_RELEASE}"
 
 echo "==============="
 
