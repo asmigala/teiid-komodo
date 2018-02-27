@@ -16,6 +16,7 @@ script: "./build.sh -b -s"
 after_success:
   - if [[ "$TRAVIS_PULL_REQUEST" == "false" ]]; then
       docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD ;
+      docker tag $(docker images --format "{{.ID}}" teiid/komodo ) $DOCKER_USERNAME/komodo:$(docker images --format "{{.Tag}}" teiid/komodo) ;
       docker images ;
-      docker push asmigala/komodo ;
+      docker push $DOCKER_USERNAME/komodo ;
     fi
